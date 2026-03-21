@@ -9,3 +9,5 @@ google-generativeai
 chromadb
 entence-transformers 
 scikit-learn
+pydantic
+typing
