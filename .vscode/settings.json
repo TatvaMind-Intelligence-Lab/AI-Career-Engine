@@ -1,0 +1,7 @@
+{
+  "python-envs.defaultEnvManager": "ms-python.python:conda",
+  "python-envs.defaultPackageManager": "ms-python.python:conda",
+  "python.defaultInterpreterPath": "C:\\Users\\Asus\\anaconda3\\envs\\tatvamind-rag\\python.exe",
+  "python.analysis.extraPaths": ["./backend"]
+
+}
