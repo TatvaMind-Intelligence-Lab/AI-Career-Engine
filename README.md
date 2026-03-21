@@ -147,6 +147,8 @@ This is the **brain of the system**.
 ✅ No vector DB  
 ✅ Focus on working prototype
 
+**Goal Achieved**
+
 ---
 
 ### 🟡 Phase 2 — RAG Integration
@@ -158,6 +160,8 @@ This is the **brain of the system**.
 - Vector database (Chroma)
 - Semantic retrieval of relevant resume sections
 - Context-aware LLM prompts
+
+**Goal Achieved**
 
 ---
 
