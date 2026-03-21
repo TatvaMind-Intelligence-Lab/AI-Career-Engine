@@ -6,6 +6,8 @@
 
 ## 📁 Project Structure
 
+```bash
+
 tatvamind-ai-career-engine/
 │
 ├── backend/
@@ -62,6 +64,8 @@ tatvamind-ai-career-engine/
 ├── .env # Environment variables
 ├── .gitignore
 └── README.md
+
+```
 
 ---
 
