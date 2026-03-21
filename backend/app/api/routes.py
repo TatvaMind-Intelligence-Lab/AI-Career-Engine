@@ -16,11 +16,11 @@ async def analyze(
         result = run_rag_pipeline(resume_text, job_description)
 
         return {
-            "status": "success",
-            "data": result["analysis"],
-            "retrieval": result["retrieval"],
-            "debug": result.get("debug", {})
-        }
+        "status": "success",
+        "data": result["analysis"],   # ✅ flatten
+        "retrieval": result.get("retrieval", []),
+        "debug": result.get("debug", {})
+    }
 
     except Exception as e:
         return {

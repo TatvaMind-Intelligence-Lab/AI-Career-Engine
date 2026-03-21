@@ -10,7 +10,6 @@ from .embedding import get_embedding
 def extract_keywords(text):
     words = re.findall(r"\b[a-zA-Z]{2,}\b", text.lower())
 
-    # remove common stopwords (basic)
     stopwords = {"and", "or", "the", "with", "a", "to", "of", "in"}
     keywords = [w for w in words if w not in stopwords]
 
@@ -25,11 +24,11 @@ def keyword_match_score(resume_text, jd_text):
     resume_keywords = extract_keywords(resume_text)
 
     if not jd_keywords:
-        return 0
+        return 0.0
 
     match = jd_keywords.intersection(resume_keywords)
 
-    return len(match) / len(jd_keywords)
+    return float(len(match) / len(jd_keywords))
 
 
 # -----------------------------
@@ -43,16 +42,13 @@ def semantic_similarity_score(resume_text, jd_text):
         [embeddings[1]]
     )[0][0]
 
-    return float(sim)
+    return float(sim)   # ✅ FIXED
 
 
 # -----------------------------
 # 4. SECTION-WISE SCORING
 # -----------------------------
 def section_score(chunks, jd_text):
-    """
-    Score different sections separately
-    """
     section_scores = {
         "skills": [],
         "experience": [],
@@ -77,9 +73,9 @@ def section_score(chunks, jd_text):
         else:
             section_scores["other"].append(score)
 
-    # Average scores
+    # ✅ FIXED
     return {
-        key: (np.mean(vals) if vals else 0)
+        key: float(np.mean(vals)) if vals else 0.0
         for key, vals in section_scores.items()
     }
 
@@ -88,11 +84,7 @@ def section_score(chunks, jd_text):
 # 5. FINAL WEIGHTED SCORE
 # -----------------------------
 def final_score(keyword_score, semantic_score, section_scores):
-    """
-    Combine all signals
-    """
 
-    # weights (you can tune later)
     weights = {
         "keyword": 0.3,
         "semantic": 0.3,
@@ -104,9 +96,9 @@ def final_score(keyword_score, semantic_score, section_scores):
     score = (
         keyword_score * weights["keyword"] +
         semantic_score * weights["semantic"] +
-        section_scores["skills"] * weights["skills"] +
-        section_scores["experience"] * weights["experience"] +
-        section_scores["projects"] * weights["projects"]
+        section_scores.get("skills", 0) * weights["skills"] +
+        section_scores.get("experience", 0) * weights["experience"] +
+        section_scores.get("projects", 0) * weights["projects"]
     )
 
-    return int(score * 100)
+    return int(float(score) * 100)

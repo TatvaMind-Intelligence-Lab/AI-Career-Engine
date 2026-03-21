@@ -60,8 +60,10 @@ def run_rag_pipeline(resume_text, jd_text):
         },
         "retrieval": relevant_chunks,
         "debug": {
-            "keyword_score": round(keyword_score, 3),
-            "semantic_score": round(semantic_score, 3),
-            "section_scores": section_scores
+        "keyword_score": float(round(keyword_score, 3)),
+        "semantic_score": float(round(semantic_score, 3)),
+        "section_scores": {
+            k: float(v) for k, v in section_scores.items()
         }
+    }
     }
