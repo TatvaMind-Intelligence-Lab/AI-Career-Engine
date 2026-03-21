@@ -21,7 +21,9 @@ tatvamind-ai-career-engine/
 │ │ ├── services/ # 🔥 Core business logic (brain of system)
 │ │ │ ├── parser.py # Resume & JD text extraction
 │ │ │ ├── embeddings.py # Text → vector embeddings
-│ │ │ ├── rag_pipeline.py # Retrieval + generation pipeline
+│ │ │ ├── rag_pipeline.py #  generation pipeline
+│ │ │ ├── retrival.py # Retrieve chunks from db
+│ │ │ ├── vector_store.py # store vector chunks
 │ │ │ ├── scorer.py # Match scoring logic
 │ │ │ └── llm.py # LLM interaction layer
 │ │ │
