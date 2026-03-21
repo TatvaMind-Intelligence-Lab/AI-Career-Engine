@@ -1,26 +1,36 @@
 import os
+import json
+import re
 import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-# for m in genai.list_models():
-#     print(m.name)
-
 # Configure API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# ✅ Correct model
-model = genai.GenerativeModel("gemini-2.5-flash")
+# Model
+model = genai.GenerativeModel("gemini-2.5-flash")  # safer than 2.5 for now
+
+
+def extract_json(text):
+    """
+    Extract JSON from model response safely
+    """
+    try:
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+        if match:
+            return json.loads(match.group())
+        return None
+    except Exception:
+        return None
 
 
 def analyze_resume(resume_text, jd_text):
     prompt = f"""
 You are an ATS optimization expert.
 
-Compare the following resume with the job description.
+Analyze the resume against the job description.
 
 Resume:
 {resume_text}
@@ -28,18 +38,41 @@ Resume:
 Job Description:
 {jd_text}
 
-Return STRICTLY in this format:
+Return ONLY valid JSON.
 
-Match Score: <number>
-Missing Keywords: <comma separated list>
-Suggestions:
-- ...
-- ...
-Rewritten Bullet Points:
-- ...
-- ...
+STRICT RULES:
+- No explanation
+- No markdown
+- No text outside JSON
+- Ensure valid JSON format
+
+Format:
+{{
+  "score": number,
+  "missing_keywords": ["keyword1", "keyword2"],
+  "suggestions": ["suggestion1", "suggestion2"],
+  "rewritten_points": ["point1", "point2"]
+}}
+
+If unable to generate, return:
+{{}}
 """
 
-    response = model.generate_content(prompt)
+    try:
+        response = model.generate_content(prompt)
+        raw_text = response.text
 
-    return response.text
+        parsed = extract_json(raw_text)
+
+        if parsed:
+            return parsed
+        else:
+            return {
+                "error": "Invalid JSON from model",
+                "raw_output": raw_text
+            }
+
+    except Exception as e:
+        return {
+            "error": str(e)
+        }

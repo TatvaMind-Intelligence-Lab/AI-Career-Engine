@@ -16,7 +16,7 @@ async def analyze(
 
         return {
             "status": "success",
-            "analysis": result
+            "data": result
         }
 
     except Exception as e:
