@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { analyzeResume } from "../Services/api";
 
-export default function UploadForm({ setResult }) {
+export default function UploadForm({ setResult, setRetrieval }) {
   const [file, setFile] = useState(null);
   const [jd, setJd] = useState("");
   const [loading, setLoading] = useState(false);
@@ -10,8 +10,16 @@ export default function UploadForm({ setResult }) {
     if (!file || !jd) return alert("Provide both inputs");
 
     setLoading(true);
+
     const res = await analyzeResume(file, jd);
-    setResult(res.data);
+
+    console.log("API RESPONSE:", res);
+
+    if (res.data) {
+      setResult(res.data);
+      setRetrieval(res.retrieval || []);
+    }
+
     setLoading(false);
   };
 

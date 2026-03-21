@@ -39,7 +39,7 @@ def analyze_resume(resume_text, jd_text):
     # Step 3: Retrieve relevant chunks
     relevant_chunks = retrieve_relevant_chunks(chunks, jd_text)
 
-    context = "\n\n".join(relevant_chunks)
+    context = "\n\n".join([chunk["text"] for chunk in relevant_chunks])
     prompt = f"""
 You are an expert ATS (Applicant Tracking System) analyzer.
 
@@ -82,7 +82,10 @@ Rules:
         parsed = extract_json(raw_text)
 
         if parsed:
-            return parsed
+            return {
+                "analysis": parsed,
+                "retrieval": relevant_chunks
+            }
         else:
             return {
                 "error": "Invalid JSON from model",

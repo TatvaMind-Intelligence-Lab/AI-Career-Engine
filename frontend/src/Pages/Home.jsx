@@ -4,6 +4,7 @@ import ResultCard from "../Components/ResultCard";
 
 export default function Home() {
   const [result, setResult] = useState(null);
+  const [retrieval, setRetrieval] = useState([]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
@@ -13,8 +14,15 @@ export default function Home() {
       </h1>
 
       <div className="w-full max-w-2xl">
-        <UploadForm setResult={setResult} />
-        <ResultCard data={result} />
+        <UploadForm 
+          setResult={setResult} 
+          setRetrieval={setRetrieval} 
+        />
+
+        <ResultCard 
+          data={result} 
+          retrieval={retrieval} 
+        />
       </div>
 
     </div>

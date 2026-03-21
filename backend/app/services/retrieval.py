@@ -3,53 +3,95 @@ from sklearn.metrics.pairwise import cosine_similarity
 from .embedding import get_embedding
 
 
-def retrieve_relevant_chunks(resume_chunks, jd_text, top_k=3, min_score=0.3):
+def keyword_overlap_score(chunk, jd_text):
     """
-    Retrieve most relevant resume chunks using semantic similarity
+    Simple keyword overlap boost
+    """
+    jd_words = set(jd_text.lower().split())
+    chunk_words = set(chunk.lower().split())
+
+    overlap = jd_words.intersection(chunk_words)
+
+    return len(overlap) / (len(jd_words) + 1)
+
+
+def section_weight(chunk):
+    """
+    Assign importance based on section
+    """
+    chunk_upper = chunk.upper()
+
+    if "[SKILLS]" in chunk_upper:
+        return 1.2
+    elif "[EXPERIENCE]" in chunk_upper:
+        return 1.1
+    elif "[PROJECTS]" in chunk_upper:
+        return 1.05
+    elif "[EDUCATION]" in chunk_upper:
+        return 0.9
+    else:
+        return 1.0
+
+
+def retrieve_relevant_chunks(resume_chunks, jd_text, top_k=3, min_score=0.25):
+    """
+    Hybrid retrieval:
+    - semantic similarity
+    - keyword overlap
+    - section weighting
     """
 
-    # Step 1: Embed JD once
-    jd_embedding = get_embedding(jd_text)
-    
-    # # debugging asnd logging are crucial for retrieval quality
-    # print("\n🔍 JD Embedding Sample (first 10 values):")
-    # print(jd_embedding[:10])
+    # Step 1: Embed JD
+    jd_embedding = get_embedding([jd_text])[0]
 
-    # Step 2: Embed all chunks (batch is faster if supported)
-    chunk_embeddings = [get_embedding(chunk) for chunk in resume_chunks]
+    # Step 2: Batch embed chunks (FASTER)
+    chunk_embeddings = get_embedding(resume_chunks)
 
-    # Step 3: Compute similarities (vectorized)
-    similarities = cosine_similarity(
+    # Step 3: Semantic similarity
+    semantic_scores = cosine_similarity(
         [jd_embedding],
         chunk_embeddings
     )[0]
 
-    # Step 4: Pair chunks with scores
-    scored_chunks = list(zip(resume_chunks, similarities))
+    scored_chunks = []
 
-    # Step 5: Filter low-quality chunks
-    filtered_chunks = [
-        (chunk, score)
-        for chunk, score in scored_chunks
-        if score >= min_score
-    ]
+    for chunk, semantic_score in zip(resume_chunks, semantic_scores):
 
-    # Step 6: Sort by similarity (descending)
-    filtered_chunks.sort(key=lambda x: x[1], reverse=True)
+        # Step 4: Keyword score
+        keyword_score = keyword_overlap_score(chunk, jd_text)
 
-    # Step 7: Fallback if everything filtered out
-    if not filtered_chunks:
-        filtered_chunks = scored_chunks
-        filtered_chunks.sort(key=lambda x: x[1], reverse=True)
+        # Step 5: Section weight
+        weight = section_weight(chunk)
 
-    # Step 8: Select top_k
-    top_chunks = filtered_chunks[:top_k]
+        # Step 6: Final hybrid score
+        final_score = (0.7 * semantic_score + 0.3 * keyword_score) * weight
 
-    # 🔍 Debug logs (VERY useful)
-    print("\n🔍 Top Retrieved Chunks:")
-    for i, (chunk, score) in enumerate(top_chunks):
-        print(f"{i+1}. Score: {score:.4f}")
+        scored_chunks.append((chunk, final_score, semantic_score, keyword_score))
+
+    # Step 7: Filter low-quality
+    filtered = [c for c in scored_chunks if c[1] >= min_score]
+
+    if not filtered:
+        filtered = scored_chunks
+
+    # Step 8: Sort
+    filtered.sort(key=lambda x: x[1], reverse=True)
+
+    top_chunks = filtered[:top_k]
+
+    # 🔍 Debug logs
+    print("\n🧠 Hybrid Retrieval Results:")
+    for i, (chunk, final, sem, key) in enumerate(top_chunks):
+        print(f"{i+1}. Final: {final:.4f} | Semantic: {sem:.4f} | Keyword: {key:.4f}")
         print(chunk[:120])
-        print("-" * 40)
+        print("-" * 50)
 
-    return [chunk for chunk, _ in top_chunks]
+    return [
+        {
+            "text": chunk,
+            "final_score": float(final),
+            "semantic_score": float(sem),
+            "keyword_score": float(key)
+        }
+        for chunk, final, sem, key in top_chunks
+    ]

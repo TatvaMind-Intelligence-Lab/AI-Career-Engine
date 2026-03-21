@@ -1,13 +1,23 @@
-export default function ResultCard({ data }) {
+export default function ResultCard({ data, retrieval }) {
   if (!data) return null;
 
   return (
     <div className="mt-6 space-y-6">
-      
       {/* Score */}
-      <div className="text-center">
-        <h2 className="text-4xl font-bold">{data.score}</h2>
-        <p className="text-gray-500">Match Score</p>
+      <div className="mt-6">
+        <h3 className="font-semibold mb-2">Retrieved Resume Sections</h3>
+
+        {retrieval?.map((item, i) => (
+          <div key={i} className="bg-gray-100 p-3 rounded mb-3">
+            <p className="text-sm text-gray-600 mb-2">
+              Final: {item.final_score.toFixed(2)} | Semantic:{" "}
+              {item.semantic_score.toFixed(2)} | Keyword:{" "}
+              {item.keyword_score.toFixed(2)}
+            </p>
+
+            <p className="text-sm">{item.text}</p>
+          </div>
+        ))}
       </div>
 
       {/* Missing Keywords */}
@@ -41,7 +51,6 @@ export default function ResultCard({ data }) {
           ))}
         </ul>
       </div>
-
     </div>
   );
 }
