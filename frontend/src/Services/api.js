@@ -1,12 +1,13 @@
-export const analyzeResume = async (file, jobDescription) => {
+export async function analyzeResume(file, jd) {
   const formData = new FormData();
-  formData.append("resume", file);
-  formData.append("job_description", jobDescription);
 
-  const response = await fetch("http://127.0.0.1:8000/analyze", {
+  formData.append("resume", file);
+  formData.append("job_description", jd);
+
+  const res = await fetch("http://localhost:8000/api/v1/analyze", {
     method: "POST",
     body: formData,
   });
 
-  return response.json();
-};
+  return res.json();
+}
