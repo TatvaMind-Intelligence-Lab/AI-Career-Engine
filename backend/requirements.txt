@@ -6,3 +6,6 @@ python-docx
 openai
 python-dotenv
 google-generativeai
+chromadb
+entence-transformers 
+scikit-learn

@@ -1,6 +1,7 @@
+from unittest import result
 from fastapi import APIRouter, UploadFile, File, Form
-from app.services.parser import extract_text
-from app.services.llm import analyze_resume
+from ..services.parser import extract_text
+from ..services.llm import analyze_resume
 
 router = APIRouter()
 

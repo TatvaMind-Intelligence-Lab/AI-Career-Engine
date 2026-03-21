@@ -5,6 +5,7 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 from ..utils.chunking import chunk_resume
 from .retrieval import retrieve_relevant_chunks
+from .vector_store import store_resume_chunks
 
 load_dotenv()
 
@@ -29,10 +30,13 @@ def extract_json(text):
 
 
 def analyze_resume(resume_text, jd_text):
-    # Step 1: Chunk resume
+    # Step 1: Chunk
     chunks = chunk_resume(resume_text)
 
-    # Step 2: Retrieve relevant parts
+    # Step 2: Store in vector DB
+    store_resume_chunks(chunks)
+
+    # Step 3: Retrieve relevant chunks
     relevant_chunks = retrieve_relevant_chunks(chunks, jd_text)
 
     context = "\n\n".join(relevant_chunks)
