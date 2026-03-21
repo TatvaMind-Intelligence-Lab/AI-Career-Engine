@@ -1,7 +1,7 @@
 from unittest import result
 from fastapi import APIRouter, UploadFile, File, Form
 from ..services.parser import extract_text
-from ..services.llm import analyze_resume
+from ..services.ragpipeline import run_rag_pipeline
 
 router = APIRouter()
 
@@ -13,7 +13,7 @@ async def analyze(
     try:
         resume_text = extract_text(resume)
 
-        result = analyze_resume(resume_text, job_description)
+        result = run_rag_pipeline(resume_text, job_description)
 
         return {
             "status": "success",

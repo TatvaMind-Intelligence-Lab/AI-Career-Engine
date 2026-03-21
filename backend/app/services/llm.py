@@ -4,17 +4,6 @@ import re
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-from ..utils.chunking import chunk_resume
-from .retrieval import retrieve_relevant_chunks
-from .vector_store import store_resume_chunks
-
-from ..services.scorer import (
-    keyword_match_score,
-    semantic_similarity_score,
-    section_score,
-    final_score
-)
-
 load_dotenv()
 
 # Configure API
@@ -37,39 +26,17 @@ def extract_json(text):
 
 
 # -----------------------------
-# MAIN PIPELINE
+# LLM GENERATION ONLY
 # -----------------------------
-def analyze_resume(resume_text, jd_text):
+def generate_analysis(context, jd_text):
+    """
+    Only handles LLM generation
+    No scoring, no retrieval, no chunking
+    """
 
-    # -------------------------
-    # STEP 1: CHUNKING
-    # -------------------------
-    chunks = chunk_resume(resume_text)
+    # Safety: limit context size (prevents model breaking)
+    context = context[:3000]
 
-    # -------------------------
-    # STEP 2: VECTOR STORAGE
-    # -------------------------
-    store_resume_chunks(chunks)
-
-    # -------------------------
-    # STEP 3: RETRIEVAL
-    # -------------------------
-    relevant_chunks = retrieve_relevant_chunks(chunks, jd_text)
-
-    context = "\n\n".join([chunk["text"] for chunk in relevant_chunks])
-
-    # -------------------------
-    # STEP 4: SCORING ENGINE
-    # -------------------------
-    keyword_score = keyword_match_score(resume_text, jd_text)
-    semantic_score = semantic_similarity_score(resume_text, jd_text)
-    section_scores = section_score(chunks, jd_text)
-
-    score = final_score(keyword_score, semantic_score, section_scores)
-
-    # -------------------------
-    # STEP 5: LLM ANALYSIS
-    # -------------------------
     prompt = f"""
 You are an expert ATS (Applicant Tracking System) analyzer.
 
@@ -94,9 +61,10 @@ Return ONLY valid JSON:
 }}
 
 Rules:
-- Do NOT generate score (score is computed separately)
-- Do NOT add extra text
-- Output strictly JSON
+- Do NOT generate score
+- Do NOT add explanations
+- Output strictly valid JSON
+- If unsure, return empty lists
 """
 
     try:
@@ -107,34 +75,25 @@ Rules:
 
         if parsed:
             return {
-                "analysis": {
-                    "score": score,
-                    "missing_keywords": parsed.get("missing_keywords", []),
-                    "suggestions": parsed.get("suggestions", []),
-                    "rewritten_points": parsed.get("rewritten_points", [])
-                },
-                "retrieval": relevant_chunks,
-                "debug": {
-                    "keyword_score": round(keyword_score, 3),
-                    "semantic_score": round(semantic_score, 3),
-                    "section_scores": section_scores
-                }
+                "missing_keywords": parsed.get("missing_keywords", []),
+                "suggestions": parsed.get("suggestions", []),
+                "rewritten_points": parsed.get("rewritten_points", [])
             }
 
         else:
-            print("\n❌ RAW MODEL OUTPUT:\n", raw_text)
+            print("\n❌ LLM RAW OUTPUT:\n", raw_text)
 
             return {
-                "analysis": {
-                    "score": score,
-                    "missing_keywords": [],
-                    "suggestions": ["Model failed to generate structured output"],
-                    "rewritten_points": []
-                },
-                "retrieval": relevant_chunks
+                "missing_keywords": [],
+                "suggestions": ["LLM output parsing failed"],
+                "rewritten_points": []
             }
 
     except Exception as e:
+        print("\n❌ LLM ERROR:", str(e))
+
         return {
-            "error": str(e)
+            "missing_keywords": [],
+            "suggestions": ["LLM failed to respond"],
+            "rewritten_points": []
         }
