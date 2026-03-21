@@ -18,7 +18,8 @@ async def analyze(
         return {
             "status": "success",
             "data": result["analysis"],
-            "retrieval": result["retrieval"]
+            "retrieval": result["retrieval"],
+            "debug": result.get("debug", {})
         }
 
     except Exception as e:

@@ -4,7 +4,9 @@ export default function ResultCard({ data, retrieval }) {
   return (
     <div className="mt-6 space-y-6">
       {/* Score */}
-      <div className="mt-6">
+      <div className="text-center">
+        <h2 className="text-4xl font-bold">{data.score}</h2>
+        <p className="text-gray-500">Match Score</p>
         <h3 className="font-semibold mb-2">Retrieved Resume Sections</h3>
 
         {retrieval?.map((item, i) => (

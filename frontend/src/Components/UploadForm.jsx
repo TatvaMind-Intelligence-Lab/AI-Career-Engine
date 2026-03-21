@@ -16,7 +16,7 @@ export default function UploadForm({ setResult, setRetrieval }) {
     console.log("API RESPONSE:", res);
 
     if (res.data) {
-      setResult(res.data);
+      setResult(res.data.analsis);
       setRetrieval(res.retrieval || []);
     }
 
