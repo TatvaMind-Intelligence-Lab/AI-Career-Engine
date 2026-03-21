@@ -37,34 +37,38 @@ def analyze_resume(resume_text, jd_text):
 
     context = "\n\n".join(relevant_chunks)
     prompt = f"""
-You are an ATS optimization expert.
+You are an expert ATS (Applicant Tracking System) analyzer.
 
-Analyze the resume against the job description.
+Your job is to evaluate how well a candidate's resume matches a job description.
 
-Resume:
-{resume_text}
+IMPORTANT:
+- You are given ONLY the most relevant sections of the resume (not full resume)
+- Base your analysis ONLY on this context
+- Be precise and realistic
+
+========================
+Relevant Resume Sections:
+{context}
+========================
 
 Job Description:
 {jd_text}
 
-Return ONLY valid JSON.
+========================
 
-STRICT RULES:
-- No explanation
-- No markdown
-- No text outside JSON
-- Ensure valid JSON format
+Return ONLY valid JSON:
 
-Format:
 {{
-  "score": number,
-  "missing_keywords": ["keyword1", "keyword2"],
-  "suggestions": ["suggestion1", "suggestion2"],
-  "rewritten_points": ["point1", "point2"]
+  "score": number (0-100),
+  "missing_keywords": ["..."],
+  "suggestions": ["..."],
+  "rewritten_points": ["..."]
 }}
 
-If unable to generate, return:
-{{}}
+Rules:
+- Do NOT assume missing info outside context
+- Do NOT add explanations outside JSON
+- Keep suggestions actionable and concise
 """
 
     try:

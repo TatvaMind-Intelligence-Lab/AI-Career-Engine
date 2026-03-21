@@ -13,7 +13,19 @@ def retrieve_relevant_chunks(resume_chunks, jd_text, top_k=3):
         for chunk_emb in chunk_embeddings
     ]
 
-    # Get top-k chunks
-    top_indices = np.argsort(similarities)[-top_k:][::-1]
+    # Pair chunks with scores
+    scored_chunks = list(zip(resume_chunks, similarities))
 
-    return [resume_chunks[i] for i in top_indices]
+    # Sort by similarity (high → low)
+    scored_chunks.sort(key=lambda x: x[1], reverse=True)
+
+    # Select top_k
+    top_chunks = scored_chunks[:top_k]
+
+    # Optional debug
+    print("\n🔍 Top Retrieved Chunks:")
+    for chunk, score in top_chunks:
+        print(f"Score: {score:.4f}")
+        print(chunk[:100], "\n")
+
+    return [chunk for chunk, _ in top_chunks]
