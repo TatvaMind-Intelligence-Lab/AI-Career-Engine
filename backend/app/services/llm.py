@@ -3,6 +3,8 @@ import json
 import re
 import google.generativeai as genai
 from dotenv import load_dotenv
+from ..utils.chunking import chunk_resume
+from .retrieval import retrieve_relevant_chunks
 
 load_dotenv()
 
@@ -27,6 +29,13 @@ def extract_json(text):
 
 
 def analyze_resume(resume_text, jd_text):
+    # Step 1: Chunk resume
+    chunks = chunk_resume(resume_text)
+
+    # Step 2: Retrieve relevant parts
+    relevant_chunks = retrieve_relevant_chunks(chunks, jd_text)
+
+    context = "\n\n".join(relevant_chunks)
     prompt = f"""
 You are an ATS optimization expert.
 
