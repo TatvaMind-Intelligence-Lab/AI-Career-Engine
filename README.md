@@ -1,6 +1,29 @@
-# 🧠 TatvaMind AI Career Engine
+# 🧠 TatvaMind Intelligence Lab  
+## AI Career Engine
 
-### High-Level Architecture & Development Roadmap
+### Intelligent Resume Analysis System Powered by RAG & LLMs
+
+---
+
+## 🔬 Overview
+
+**TatvaMind AI Career Engine** is a production-oriented AI system designed to analyze resumes against job descriptions using advanced **Retrieval-Augmented Generation (RAG)** and **Large Language Models (LLMs)**.
+
+The system evaluates candidate profiles, identifies skill gaps, and provides actionable insights to improve job success rates.
+
+Built under **TatvaMind Intelligence Lab**, this project reflects a research-driven approach to applied AI systems.
+
+---
+
+## 🏗️ System Architecture
+
+The platform follows a **modular, layered architecture**:
+
+- **Backend (FastAPI)** → Core intelligence & APIs  
+- **Services Layer** → RAG pipeline, embeddings, scoring  
+- **Vector Database** → Semantic retrieval (Chroma)  
+- **Frontend (Next.js)** → User interface  
+- **Deployment Layer** → Docker + GCP + Nginx  
 
 ---
 
@@ -71,7 +94,7 @@ tatvamind-ai-career-engine/
 
 ---
 
-## 🧠 Folder Responsibilities
+## 🧠 Core System Layers
 
 ### 🔹 `backend/app/services/` (Core Engine)
 
