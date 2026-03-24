@@ -11,13 +11,16 @@ from app.core.exception import TatvaMindError
 
 from app.schemas.response import APIResponse
 
+from app.core.security import get_current_user
+
 router = APIRouter()
 
 
 @router.post("/analyze", response_model=APIResponse)
 async def analyze_resume(
     resume: UploadFile = File(...),
-    job_description: str = Form(...)
+    job_description: str = Form(...),
+    current_user: dict = Depends(get_current_user)  # ✅ ADD THIS
 ):
     try:
         # -------------------------
@@ -29,7 +32,7 @@ async def analyze_resume(
         if not job_description or len(job_description.strip()) < 10:
             raise TatvaMindError("Job description too short")
 
-        logger.info("📥 Request received")
+        logger.info(f"📥 Request received from user: {current_user.get('email')}")  # ✅ OPTIONAL LOG
 
         # -------------------------
         # PARSE FILE
@@ -51,7 +54,7 @@ async def analyze_resume(
                 resume_text,
                 job_description
             ),
-            timeout=30  # ⏱️ timeout protection
+            timeout=30
         )
 
         logger.info("✅ Pipeline completed")

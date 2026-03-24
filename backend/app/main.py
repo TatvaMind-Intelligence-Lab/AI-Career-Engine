@@ -3,13 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router
 from app.api.auth import router as auth
 from app.db.database import engine, Base
+
+# ✅ Create tables
 Base.metadata.create_all(bind=engine)
 
-
-# ✅ Create app FIRST
+# ✅ Create app
 app = FastAPI(title="TatvaMind AI Career Engine")
 
-# ✅ Then add middleware
+# ✅ Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,6 +19,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ Then include routes  
-app.include_router(router)
-app.include_router(auth, prefix="/api/v1")
+# ✅ Include routers separately
+app.include_router(router, prefix="/api/v1")
+app.include_router(auth, prefix="/api/v1/auth")
