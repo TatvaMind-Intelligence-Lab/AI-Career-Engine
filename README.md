@@ -13,6 +13,8 @@ The system evaluates candidate profiles, identifies skill gaps, and provides act
 
 Built under **TatvaMind Intelligence Lab**, this project reflects a research-driven approach to applied AI systems.
 
+Link to the System [AI Career Engine](https://ai-career-engine.vercel.app/)
+
 ---
 
 ## 🏗️ System Architecture
@@ -269,3 +271,5 @@ A **production-ready AI system** that:
 - Helps users improve resumes
 - Increases job success rate
 - Generates real revenue under **TatvaMind Labs**
+
+Build with ❤️ by [TatvaMind Intelligence Lab](https://tatvamindlabs.vrecel.app/)
