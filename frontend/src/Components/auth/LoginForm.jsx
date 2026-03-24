@@ -23,7 +23,6 @@ export default function LoginForm() {
     try {
       const res = await loginAPI(email, password);
 
-      console.log("LOGIN RESPONSE:", res); // ✅ debug
 
       if (res?.status === "success") {
         login(res.user);

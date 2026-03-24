@@ -5,10 +5,6 @@ export async function authorizedFetch(endpoint, options = {}) {
 
   const url = `http://127.0.0.1:8000/api/v1${endpoint}`; // 🔥 force absolute
 
-  // console.log("FINAL URL:", url);
-  // console.log("BASE_URL:", BASE_URL);
-  // console.log("ENDPOINT:", endpoint);
-  // console.log("FINAL URL:", `${BASE_URL}${endpoint}`);
 
   const res = await fetch(url, {
     ...options,

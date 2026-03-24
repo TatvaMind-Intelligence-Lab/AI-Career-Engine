@@ -21,8 +21,6 @@ export default function SignupForm() {
     try {
       const res = await signup(email, password);
 
-      console.log("SIGNUP RESPONSE:", res); // ✅ debug
-
       if (res?.status === "success") {
         toast.success("Signup successful! Please login.");
 
