@@ -21,4 +21,4 @@ app.add_middleware(
 
 # ✅ Include routers separately
 app.include_router(router, prefix="/api/v1")
-app.include_router(auth, prefix="/api/v1/auth")
+app.include_router(auth, prefix="/api/v1")

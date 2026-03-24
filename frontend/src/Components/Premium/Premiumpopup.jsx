@@ -1,4 +1,4 @@
-import Modal from "../common/Modal";
+import Modal from "../commons/Modal";
 
 export default function PremiumPopup({ isOpen, onClose, onUpgrade }) {
   return (

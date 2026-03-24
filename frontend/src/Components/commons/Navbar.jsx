@@ -26,9 +26,9 @@ export default function Navbar() {
             </div>
 
             {/* Logout */}
-            <button onClick={logout} className="text-sm text-gray-600">
+            <Link to="/" onClick={logout} className="text-sm text-gray-600">
               Logout
-            </button>
+            </Link>
           </div>
         )}
       </div>

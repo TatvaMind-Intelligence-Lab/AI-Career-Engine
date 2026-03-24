@@ -31,7 +31,7 @@ export default function LoginForm() {
 
         toast.success("Login successful!");
 
-        navigate("/"); // ✅ direct redirect (no timeout needed)
+        navigate("/dashboard"); // ✅ direct redirect (no timeout needed)
       } else {
         toast.error(res?.message || "Invalid credentials");
       }

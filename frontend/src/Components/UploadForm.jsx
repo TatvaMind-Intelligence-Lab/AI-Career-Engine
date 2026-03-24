@@ -16,6 +16,11 @@ export default function UploadForm({ setResult, setRetrieval }) {
     try {
       const res = await analyzeResume(file, jd);
 
+      if (res.detail?.includes("Free limit")) {
+        alert("Upgrade to premium"); // temp
+        return;
+      }
+
       setResult(res.data);
       setRetrieval(res.retrieval || []);
     } catch (err) {
