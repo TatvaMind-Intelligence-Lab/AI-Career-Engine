@@ -11,3 +11,7 @@ sentence-transformers
 scikit-learn
 pydantic
 typing
+sqlalchemy
+PyJWT
+passlib
+psycopg2-binary
