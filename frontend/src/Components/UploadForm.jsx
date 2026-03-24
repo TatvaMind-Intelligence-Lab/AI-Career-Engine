@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { analyzeResume } from "../services/api";
+import { analyzeResume } from "../Services/api";
 
 export default function UploadForm({ setResult, setRetrieval }) {
   const [file, setFile] = useState(null);

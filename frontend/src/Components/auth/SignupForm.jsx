@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signup } from "../../services/auth"; // ✅ FIXED
+import { signup } from "../../Services/auth"; // ✅ FIXED
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 

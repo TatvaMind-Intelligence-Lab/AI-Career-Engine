@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { login as loginAPI } from "../../services/auth"; // ✅ FIXED PATH
+import { login as loginAPI } from "../../Services/auth"; // ✅ FIXED PATH
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -22,7 +22,6 @@ export default function LoginForm() {
 
     try {
       const res = await loginAPI(email, password);
-
 
       if (res?.status === "success") {
         login(res.user);
