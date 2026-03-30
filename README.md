@@ -272,4 +272,4 @@ A **production-ready AI system** that:
 - Increases job success rate
 - Generates real revenue under **TatvaMind Labs**
 
-Build with ❤️ by [TatvaMind Intelligence Lab](https://tatvamindlabs.vrecel.app/)
+Build with ❤️ by [TatvaMind Intelligence Lab](https://www.tatvamindintelligencelab.com/)
